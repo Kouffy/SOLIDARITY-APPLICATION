@@ -4,9 +4,14 @@ import 'package:solidarite/Models/Utilisateur.dart';
 
 class APIServices {
   static String utilisateurUrl = 'http://192.168.1.5:9090/api/utilisateur/';
+  static String demandeUrl = 'http://192.168.1.5:9090/api/demande/';
 
   static Future fetchUtilisateur() async {
     return await http.get(utilisateurUrl);
+  }
+
+  static Future fetchDemande(String ville,int id) async {
+    return await http.get(demandeUrl + ville + "/" + id.toString());
   }
 
   static Map<String, String> header = {
@@ -31,7 +36,7 @@ class APIServices {
   }
 
   static Future getUtilisateurLogin(String login, String password) async {
-    var res =  await http.get(utilisateurUrl + login + "/" + password);
+    var res = await http.get(utilisateurUrl + login + "/" + password);
     return res;
   }
 }
