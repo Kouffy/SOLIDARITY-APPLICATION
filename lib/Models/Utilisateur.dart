@@ -3,6 +3,7 @@ class Utilisateur {
   String _nom;
   String _prenom;
   int _age;
+  String _sexe;
   String _adresse;
   String _region;
   String _ville;
@@ -16,6 +17,7 @@ class Utilisateur {
       this._nom,
       this._prenom,
       this._age,
+      this._sexe,
       this._adresse,
       this._region,
       this._ville,
@@ -26,11 +28,12 @@ class Utilisateur {
       this._password,
       this._type);
 
-  Utilisateur.WithId(
+  Utilisateur.withId(
       this._id,
       this._nom,
       this._prenom,
       this._age,
+      this._sexe,
       this._adresse,
       this._region,
       this._ville,
@@ -45,6 +48,7 @@ class Utilisateur {
   String get nom => _nom;
   String get prenom => _prenom;
   int get age => _age;
+    String get sexe => _sexe;
   String get adreesee => _adresse;
   String get region => _region;
   String get ville => _ville;
@@ -66,7 +70,9 @@ class Utilisateur {
   set age(int newage) {
     _age = newage;
   }
-
+set sexe(String newsexe) {
+    _sexe = newsexe;
+  }
   set adresse(String newadresse) {
     _adresse = newadresse;
   }
@@ -109,6 +115,7 @@ class Utilisateur {
     map["prenom"] = _prenom;
     map["age"] = _age;
     map["adresse"] = _adresse;
+    map["sexe"] = _sexe;
     map["region"] = _region;
     map["ville"] = _ville;
     map["pdp"] = _pdp;
@@ -128,6 +135,7 @@ class Utilisateur {
     this.nom = o["nom"];
     this.prenom =o["prenom"];
     this.age =o["age"];
+    this.sexe =o["sexe"];
     this.adresse =o["adresse"];
     this.region =o["region"];
     this.ville =o["ville"];

@@ -259,12 +259,27 @@ class _RegisterState extends State<Register> {
                SizedBox(
               height: 10.0,
             ),
-            RaisedButton(             
-              padding: EdgeInsets.all(8.0),
-              textColor: Colors.blueAccent,
-              onPressed: () => enregistrerUtilisateur(),
-            child: Text("S\'enregistrer"),
-            ),
+            RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      textColor: Colors.white,
+                      padding: const EdgeInsets.all(0.0),
+                      onPressed: () =>  enregistrerUtilisateur(),
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: LinearGradient(colors: [
+                              Color.fromRGBO(143, 148, 251, 1),
+                              Color.fromRGBO(143, 148, 251, .6),
+                            ])),
+                        padding: EdgeInsets.all(10.0),
+                        child: Center(
+                          child: Text('S\'enregistrer',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w500)),
+                        ),
+                      ))
           ],
         ));
   }

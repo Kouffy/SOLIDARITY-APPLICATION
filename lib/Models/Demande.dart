@@ -5,7 +5,7 @@ class Demande {
   String _description;
   String _etat;
   String _priorite;
-  int _idutilisateur;
+  int _idUtilisateur;
 
   Demande(
       this._libelle,
@@ -13,7 +13,7 @@ class Demande {
       this._description,
       this._etat,
       this._priorite,
-      this._idutilisateur,);
+      this._idUtilisateur,);
 
   Demande.WithId(
       this._id,
@@ -22,7 +22,7 @@ class Demande {
       this._description,
       this._etat,
       this._priorite,
-      this._idutilisateur);
+      this._idUtilisateur);
 
   int get id => _id;
   String get libelle => _libelle;
@@ -30,7 +30,7 @@ class Demande {
   String get description => _description;
   String get etat => _etat;
   String get priorite => _priorite;
-  int get idutilisateur => _idutilisateur;
+  int get idUtilisateur => _idUtilisateur;
 
 
 
@@ -54,8 +54,8 @@ class Demande {
     _priorite = newpriorite;
   }
 
-  set idutilisateur(int newidutilisateur) {
-    _idutilisateur = newidutilisateur;
+  set idUtilisateur(int newidUtilisateur) {
+    _idUtilisateur = newidUtilisateur;
   }
 
  
@@ -67,7 +67,7 @@ class Demande {
     map["description"] = _description;
     map["etat"] = _etat;
     map["priorite"] = _priorite;
-    map["idutilisateur"] = _idutilisateur;
+    map["idUtilisateur"] = _idUtilisateur;
     if (_id != null) {
       map["id"] = _id;
     }
@@ -81,6 +81,6 @@ class Demande {
     this.description =o["description"];
     this.etat =o["etat"];
     this.priorite =o["priorite"];
-    this.idutilisateur =o["idutilisateur"];
+    this.idUtilisateur =o["idUtilisateur"];
   }
 }
