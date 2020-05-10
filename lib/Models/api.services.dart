@@ -6,6 +6,7 @@ import 'package:solidarite/Models/Utilisateur.dart';
 class APIServices {
   static String utilisateurUrl = 'http://192.168.1.5:9090/api/utilisateur/';
   static String demandeUrl = 'http://192.168.1.5:9090/api/demande/';
+  static String rapportUrl = 'http://192.168.1.5:9090/api/Rapport/';
   static String demandeActiveUrl = 'GetDemandeActive/';
   static String demandeArchiveUrl = 'GetDemandeArchive/';
   static String volontaireUrl = 'GetVolontaire/';
@@ -17,6 +18,14 @@ class APIServices {
 
   static Future fetchDemande(String ville, int id) async {
     return await http.get(demandeUrl + ville + "/" + id.toString());
+  }
+
+  static Future fetchAllDemande() async {
+    return await http.get(demandeUrl);
+  }
+
+  static Future fetchAllRapports() async {
+    return await http.get(rapportUrl);
   }
 
   static Future fetchDemandeActive(int id) async {
@@ -56,7 +65,20 @@ class APIServices {
   static Future<bool> putDemandeEncours(Demande demande) async {
     var monDemande = demande.toMap();
     var demandeBody = convert.json.encode(monDemande);
-    var res = await http.put(demandeUrl + demandePutEnCoursUrl + demande.id.toString(), headers: header, body: demandeBody);
+    var res = await http.put(
+        demandeUrl + demandePutEnCoursUrl + demande.id.toString(),
+        headers: header,
+        body: demandeBody);
+    print(res.statusCode);
+    return Future.value(res.statusCode == 204 ? true : false);
+  }
+  static Future<bool> putUtilisateur(Utilisateur utilisateur) async {
+    var monUtilisateur = utilisateur.toMap();
+    var utilisateurBody = convert.json.encode(monUtilisateur);
+    var res = await http.put(
+        utilisateurUrl + utilisateur.id.toString(),
+        headers: header,
+        body: utilisateurBody);
     print(res.statusCode);
     return Future.value(res.statusCode == 204 ? true : false);
   }
@@ -68,6 +90,20 @@ class APIServices {
     return Future.value(res.statusCode == 200 ? true : false);
   }
 
+  static Future<bool> deletetDemande(int id) async {
+    var res = await http.delete(demandeUrl + id.toString(), headers: header);
+    print(res.statusCode);
+    return Future.value(res.statusCode == 200 ? true : false);
+  }
+    static Future<bool> deleteRapport(int id) async {
+    var res = await http.delete(rapportUrl + id.toString(), headers: header);
+    print(res.statusCode);
+    return Future.value(res.statusCode == 200 ? true : false);
+  }
+ static Future getUtilisateur(int id) async {
+    var res = await http.get(utilisateurUrl +id.toString());
+    return res;
+  }
   static Future getUtilisateurLogin(String login, String password) async {
     var res = await http.get(utilisateurUrl + login + "/" + password);
     return res;

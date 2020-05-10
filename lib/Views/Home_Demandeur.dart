@@ -6,6 +6,8 @@ import 'package:solidarite/Models/Demande.dart';
 import 'package:solidarite/Models/Utilisateur.dart';
 import 'package:solidarite/Models/api.services.dart';
 
+import '../Toasts.dart';
+
 class HomeDemandeur extends StatefulWidget {
   @override
   _HomeDemandeurState createState() => _HomeDemandeurState();
@@ -114,6 +116,29 @@ class _HomeDemandeurState extends State<HomeDemandeur> {
           child: ListTile(
             title: ListTile(
               title: Text(demandesActive[index].libelle),
+              trailing: demandesActive[index].etat == "d" ? new RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                textColor: Colors.white,
+                onPressed: () => changeEtat(
+                    demandesActive[index].id,
+                    demandesActive[index].libelle,
+                    demandesActive[index].datedemande,
+                    demandesActive[index].description,"d",
+                    demandesActive[index].priorite),
+                child: Text('Intialiser'),
+              ) : new RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                textColor: Colors.white,
+                onPressed: () => changeEtat(
+                    demandesActive[index].id,
+                    demandesActive[index].libelle,
+                    demandesActive[index].datedemande,
+                    demandesActive[index].description,"t",
+                    demandesActive[index].priorite),
+                child: Text('Finir'),
+              ),
               onTap: null,
             ),
           ),
@@ -132,6 +157,13 @@ class _HomeDemandeurState extends State<HomeDemandeur> {
           child: ListTile(
             title: ListTile(
               title: Text(demandesArchive[index].libelle),
+              trailing:  new RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                textColor: Colors.white,
+                onPressed: () => supprimerDemande(demandesActive[index].id),
+                child: Text('Finir'),
+              ),
               onTap: null,
             ),
           ),
@@ -157,7 +189,17 @@ class _HomeDemandeurState extends State<HomeDemandeur> {
       },
     );
   }
-
+  void changeEtat(int id, String libelle, String datedemande,
+      String description,String etat, String priorite) async {
+    Demande demande = new Demande.WithId(
+        id, libelle, datedemande, description,etat, priorite, 1);
+    var saveResponse = await APIServices.putDemandeEncours(demande);
+    saveResponse == true ? Toasts.showSucssesToast("zahia") : null;
+  }
+    void supprimerDemande(int id) async {
+    var saveResponse = await APIServices.deletetDemande(id);
+    saveResponse == true ? Toasts.showSucssesToast("zahia") : null;
+  }
   Widget _buildFloatingButton() {
     return FloatingActionButton(child: Icon(Icons.add), onPressed: () {});
   }

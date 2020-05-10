@@ -70,17 +70,28 @@ class _HomevolontaireState extends State<Homevolontaire> {
           child: ListTile(
             title: ListTile(
               title: Text(demandes[index].libelle.toString()),
-              trailing: new RaisedButton(
+              trailing: demandes[index].etat == "d" ? new RaisedButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
                 textColor: Colors.white,
-                onPressed: () => intervenir(
+                onPressed: () => changeEtat(
                     demandes[index].id,
                     demandes[index].libelle,
                     demandes[index].datedemande,
-                    demandes[index].description,
+                    demandes[index].description,"e",
                     demandes[index].priorite),
                 child: Text('Intervenir'),
+              ) : new RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                textColor: Colors.white,
+                onPressed: () => changeEtat(
+                    demandes[index].id,
+                    demandes[index].libelle,
+                    demandes[index].datedemande,
+                    demandes[index].description,"d",
+                    demandes[index].priorite),
+                child: Text('Annuler'),
               ),
               onTap: null,
             ),
@@ -90,10 +101,10 @@ class _HomevolontaireState extends State<Homevolontaire> {
     );
   }
 
-  void intervenir(int id, String libelle, String datedemande,
-      String description, String priorite) async {
+  void changeEtat(int id, String libelle, String datedemande,
+      String description,String etat, String priorite) async {
     Demande demande = new Demande.WithId(
-        id, libelle, datedemande, description, "e", priorite, 1);
+        id, libelle, datedemande, description,etat, priorite, 1);
     var saveResponse = await APIServices.putDemandeEncours(demande);
     saveResponse == true ? showSucssesToast() : null;
   }
