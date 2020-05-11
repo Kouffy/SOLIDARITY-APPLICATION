@@ -4,11 +4,11 @@ import 'package:solidarite/Views/EditProfile.dart';
 import 'package:solidarite/Views/Home_Demandeur.dart';
 import 'package:solidarite/Views/Home_volontaire.dart';
 import 'package:solidarite/Views/Listeutilisateur.dart';
+import 'package:solidarite/Views/LoginType.dart';
 import 'package:solidarite/Views/NewDemande.dart';
 import 'package:solidarite/Views/Profile.dart';
 import 'package:solidarite/Views/Register.dart';
 import 'package:solidarite/Views/Login.dart';
-
 import 'Views/Admin/Panel.dart';
 void main() => runApp(new MyApp());
 
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: Profile(),
+      home: LoginType(),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:solidarite/Models/Utilisateur.dart';
 
 class APIServices {
   static String utilisateurUrl = 'http://192.168.1.5:9090/api/utilisateur/';
+  static String administrateurUrl = 'http://192.168.1.5:9090/api/administrateur/';
   static String demandeUrl = 'http://192.168.1.5:9090/api/demande/';
   static String rapportUrl = 'http://192.168.1.5:9090/api/Rapport/';
   static String demandeActiveUrl = 'GetDemandeActive/';
@@ -106,6 +107,10 @@ class APIServices {
   }
   static Future getUtilisateurLogin(String login, String password) async {
     var res = await http.get(utilisateurUrl + login + "/" + password);
+    return res;
+  }
+   static Future getAdministateurLogin(String login, String password) async {
+    var res = await http.get(administrateurUrl + login + "/" + password);
     return res;
   }
 }

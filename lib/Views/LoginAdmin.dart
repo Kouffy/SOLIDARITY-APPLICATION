@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:solidarite/Models/Utilisateur.dart';
 import 'package:solidarite/Models/api.services.dart';
+import 'package:solidarite/Views/Admin/Panel.dart';
 import 'package:solidarite/Views/Home_volontaire.dart';
 import 'package:solidarite/Views/Register.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-class Login extends StatefulWidget {
+import '../Toasts.dart';
+
+class LoginAdmin extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _LoginAdminState createState() => _LoginAdminState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginAdminState extends State<LoginAdmin> {
   var loginController = new TextEditingController();
   var passwordController = new TextEditingController();
   @override
@@ -125,15 +128,15 @@ class _LoginState extends State<Login> {
 
 
 
-  void navigateToHomeVoloteire() async {
+  void navigateToAdminPanel() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Homevolontaire()),
+      MaterialPageRoute(builder: (context) => AdminPanel()),
     );
   }
 
   void loginIn() async {
-    Response userlogedin = await APIServices.getUtilisateurLogin(
+    Response userlogedin = await APIServices.getAdministateurLogin(
         loginController.text, passwordController.text);
 
     if (userlogedin.statusCode == 200) {
@@ -144,31 +147,17 @@ class _LoginState extends State<Login> {
       pref.setInt('id', user.id);
       pref.setString('nom', user.nom);
       pref.setString('prenom', user.prenom);
-      pref.setInt('age', user.age);
-      pref.setString('adresse', user.adreesee);
-      pref.setString('region', user.region);
-      pref.setString('ville', user.ville);
-      pref.setString('pdp', user.pdp);
-      pref.setString('email', user.email);
-      pref.setString('tel', user.tel);
       pref.setString('login', user.login);
       pref.setString('password', user.password);
-      pref.setString('type', user.type);
       Navigator.pop(context);
-      navigateToHomeVoloteire();
+      navigateToAdminPanel();
     } else {
       print(userlogedin.statusCode);
-      showErrorToast();
+      Toasts.showFailedToast("Connection echoué");
     }
   }
 
-  void showErrorToast() {
-    Fluttertoast.showToast(
-        msg: "Connection échoué",
-        toastLength: Toast.LENGTH_SHORT,
-        backgroundColor: Colors.red,
-        textColor: Colors.white);
-  }
+  
 
   
 }
