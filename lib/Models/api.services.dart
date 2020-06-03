@@ -4,41 +4,42 @@ import 'package:solidarite/Models/Demande.dart';
 import 'package:solidarite/Models/Utilisateur.dart';
 
 class APIServices {
-  static String utilisateurUrl = 'http://192.168.1.5:9090/api/utilisateur/';
-  static String administrateurUrl = 'http://192.168.1.5:9090/api/administrateur/';
-  static String demandeUrl = 'http://192.168.1.5:9090/api/demande/';
-  static String rapportUrl = 'http://192.168.1.5:9090/api/Rapport/';
-  static String demandeActiveUrl = 'GetDemandeActive/';
-  static String demandeArchiveUrl = 'GetDemandeArchive/';
-  static String volontaireUrl = 'GetVolontaire/';
-  static String demandePutEnCoursUrl = 'PutDemandeEnCours/';
+  static String urlBase = 'http://192.168.1.4:9090/api/';
+  static String urlUtilisateur = 'utilisateur/';
+  static String urlAdministrateur = 'administrateur/';
+  static String urlDemande = 'demande/';
+  static String urlRapport = 'rapport/';
+  static String urlDemandeActive = 'GetDemandeActive/';
+  static String urlDemandeArchive = 'GetDemandeArchive/';
+  static String urlVolontaire = 'GetVolontaire/';
+  static String urlPutDemandeEnCours = 'PutDemandeEnCours/';
 
   static Future fetchUtilisateur() async {
-    return await http.get(utilisateurUrl);
+    return await http.get(urlBase + urlUtilisateur);
   }
 
   static Future fetchDemande(String ville, int id) async {
-    return await http.get(demandeUrl + ville + "/" + id.toString());
+    return await http.get(urlBase + urlDemande + ville + "/" + id.toString());
   }
 
   static Future fetchAllDemande() async {
-    return await http.get(demandeUrl);
+    return await http.get(urlBase + urlDemande);
   }
 
   static Future fetchAllRapports() async {
-    return await http.get(rapportUrl);
+    return await http.get(urlBase + urlRapport);
   }
 
   static Future fetchDemandeActive(int id) async {
-    return await http.get(demandeUrl + demandeActiveUrl + id.toString());
+    return await http.get(urlBase + urlDemande + urlDemandeActive + id.toString());
   }
 
   static Future fetchDemandeArchive(int id) async {
-    return await http.get(demandeUrl + demandeArchiveUrl + id.toString());
+    return await http.get(urlBase + urlDemande + urlDemandeArchive + id.toString());
   }
 
   static Future fetchVolontaires(String ville) async {
-    return await http.get(utilisateurUrl + volontaireUrl + ville);
+    return await http.get(urlBase + urlUtilisateur + urlVolontaire + ville);
   }
 
   static Map<String, String> header = {
@@ -50,7 +51,7 @@ class APIServices {
     var monUtilisateur = utilisateur.toMap();
     var utilisateurBody = convert.json.encode(monUtilisateur);
     var res =
-        await http.post(utilisateurUrl, headers: header, body: utilisateurBody);
+        await http.post(urlBase + urlUtilisateur, headers: header, body: utilisateurBody);
     print(res.statusCode);
     return Future.value(res.statusCode == 201 ? true : false);
   }
@@ -58,7 +59,7 @@ class APIServices {
   static Future<bool> postDemande(Demande demande) async {
     var monDemande = demande.toMap();
     var demandeBody = convert.json.encode(monDemande);
-    var res = await http.post(demandeUrl, headers: header, body: demandeBody);
+    var res = await http.post(urlBase + urlDemande, headers: header, body: demandeBody);
     print(res.statusCode);
     return Future.value(res.statusCode == 201 ? true : false);
   }
@@ -67,7 +68,7 @@ class APIServices {
     var monDemande = demande.toMap();
     var demandeBody = convert.json.encode(monDemande);
     var res = await http.put(
-        demandeUrl + demandePutEnCoursUrl + demande.id.toString(),
+        urlBase + urlDemande + urlPutDemandeEnCours + demande.id.toString(),
         headers: header,
         body: demandeBody);
     print(res.statusCode);
@@ -77,7 +78,7 @@ class APIServices {
     var monUtilisateur = utilisateur.toMap();
     var utilisateurBody = convert.json.encode(monUtilisateur);
     var res = await http.put(
-        utilisateurUrl + utilisateur.id.toString(),
+        urlBase + urlUtilisateur + utilisateur.id.toString(),
         headers: header,
         body: utilisateurBody);
     print(res.statusCode);
@@ -86,31 +87,31 @@ class APIServices {
 
   static Future<bool> deletetUtilisateur(int id) async {
     var res =
-        await http.delete(utilisateurUrl + id.toString(), headers: header);
+        await http.delete(urlBase + urlUtilisateur + id.toString(), headers: header);
     print(res.statusCode);
     return Future.value(res.statusCode == 200 ? true : false);
   }
 
   static Future<bool> deletetDemande(int id) async {
-    var res = await http.delete(demandeUrl + id.toString(), headers: header);
+    var res = await http.delete(urlBase + urlDemande + id.toString(), headers: header);
     print(res.statusCode);
     return Future.value(res.statusCode == 200 ? true : false);
   }
     static Future<bool> deleteRapport(int id) async {
-    var res = await http.delete(rapportUrl + id.toString(), headers: header);
+    var res = await http.delete(urlBase + urlRapport + id.toString(), headers: header);
     print(res.statusCode);
     return Future.value(res.statusCode == 200 ? true : false);
   }
  static Future getUtilisateur(int id) async {
-    var res = await http.get(utilisateurUrl +id.toString());
+    var res = await http.get(urlBase + urlUtilisateur +id.toString());
     return res;
   }
   static Future getUtilisateurLogin(String login, String password) async {
-    var res = await http.get(utilisateurUrl + login + "/" + password);
+    var res = await http.get(urlBase + urlUtilisateur + login + "/" + password);
     return res;
   }
    static Future getAdministateurLogin(String login, String password) async {
-    var res = await http.get(administrateurUrl + login + "/" + password);
+    var res = await http.get(urlBase + urlAdministrateur + login + "/" + password);
     return res;
   }
 }

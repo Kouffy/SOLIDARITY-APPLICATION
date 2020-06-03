@@ -3,6 +3,7 @@ import 'package:solidarite/Models/Utilisateur.dart';
 import 'package:solidarite/Models/api.services.dart';
 
 class EditProfile extends StatefulWidget {
+  static const String routeName = '/editprofile';
   final Utilisateur utilisateur;
   EditProfile(this.utilisateur);
   @override
@@ -25,7 +26,9 @@ class _EditProfileState extends State<EditProfile> {
   var passwordController = new TextEditingController();
   var typeController = new TextEditingController();
   var textStyle = TextStyle();
-  final connectionissueSanckBar = SnackBar(content: Text("404,la connection a echoué"),);
+  final connectionissueSanckBar = SnackBar(
+    content: Text("404,la connection a echoué"),
+  );
   @override
   Widget build(BuildContext context) {
     nomController.text = utilisateur.nom;
@@ -45,8 +48,8 @@ class _EditProfileState extends State<EditProfile> {
       appBar: _builAppBar(),
       body: _buildForm(),
     );
-
   }
+
   Widget _builAppBar() {
     return AppBar(title: Text('Modifier mon Profile'));
   }
@@ -89,7 +92,8 @@ class _EditProfileState extends State<EditProfile> {
             TextField(
               controller: ageController,
               style: textStyle,
-              onChanged: (value) => utilisateur.age = int.parse(ageController.text),
+              onChanged: (value) =>
+                  utilisateur.age = int.parse(ageController.text),
               decoration: InputDecoration(
                 labelText: "Age ...",
                 labelStyle: textStyle,
@@ -104,7 +108,8 @@ class _EditProfileState extends State<EditProfile> {
             TextField(
               controller: adresseController,
               style: textStyle,
-              onChanged: (value) => utilisateur.adresse = adresseController.text,
+              onChanged: (value) =>
+                  utilisateur.adresse = adresseController.text,
               decoration: InputDecoration(
                 labelText: "Adresse ...",
                 labelStyle: textStyle,
@@ -191,7 +196,7 @@ class _EditProfileState extends State<EditProfile> {
             SizedBox(
               height: 10.0,
             ),
-             TextField(
+            TextField(
               controller: loginController,
               style: textStyle,
               onChanged: (value) => utilisateur.login = loginController.text,
@@ -209,7 +214,8 @@ class _EditProfileState extends State<EditProfile> {
             TextField(
               controller: passwordController,
               style: textStyle,
-              onChanged: (value) => utilisateur.password = passwordController.text,
+              onChanged: (value) =>
+                  utilisateur.password = passwordController.text,
               decoration: InputDecoration(
                 labelText: "Password ...",
                 labelStyle: textStyle,
@@ -222,34 +228,34 @@ class _EditProfileState extends State<EditProfile> {
               height: 10.0,
             ),
             RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      textColor: Colors.white,
-                      padding: const EdgeInsets.all(0.0),
-                      onPressed: () =>  modifierUtilisateur(),
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: LinearGradient(colors: [
-                              Color.fromRGBO(143, 148, 251, 1),
-                              Color.fromRGBO(143, 148, 251, .6),
-                            ])),
-                        padding: EdgeInsets.all(10.0),
-                        child: Center(
-                          child: Text('S\'enregistrer',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500)),
-                        ),
-                      ))
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                textColor: Colors.white,
+                padding: const EdgeInsets.all(0.0),
+                onPressed: () => modifierUtilisateur(),
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: LinearGradient(colors: [
+                        Color.fromRGBO(143, 148, 251, 1),
+                        Color.fromRGBO(143, 148, 251, .6),
+                      ])),
+                  padding: EdgeInsets.all(10.0),
+                  child: Center(
+                    child: Text('S\'enregistrer',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500)),
+                  ),
+                ))
           ],
         ));
   }
+
   void modifierUtilisateur() async {
     var saveResponse = await APIServices.putUtilisateur(utilisateur);
-    saveResponse == true ? Navigator.pop(context,true) : Scaffold.of(context).showSnackBar(connectionissueSanckBar);
+    saveResponse == true
+        ? Navigator.pop(context, true)
+        : Scaffold.of(context).showSnackBar(connectionissueSanckBar);
   }
-   
 }
-
-

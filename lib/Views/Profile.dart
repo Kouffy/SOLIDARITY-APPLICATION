@@ -8,6 +8,7 @@ import 'package:solidarite/Models/api.services.dart';
 import 'package:solidarite/Views/EditProfile.dart';
 
 class Profile extends StatefulWidget {
+  static const String routeName = '/profile';
   @override
   _ProfileState createState() => _ProfileState();
 }

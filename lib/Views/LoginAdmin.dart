@@ -12,6 +12,7 @@ import 'dart:convert';
 import '../Toasts.dart';
 
 class LoginAdmin extends StatefulWidget {
+  static const String routeName = '/adminlogin';
   @override
   _LoginAdminState createState() => _LoginAdminState();
 }

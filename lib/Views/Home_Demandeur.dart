@@ -9,6 +9,7 @@ import 'package:solidarite/Models/api.services.dart';
 import '../Toasts.dart';
 
 class HomeDemandeur extends StatefulWidget {
+  static const String routeName = '/homedemandeur';
   @override
   _HomeDemandeurState createState() => _HomeDemandeurState();
 }
@@ -124,8 +125,7 @@ class _HomeDemandeurState extends State<HomeDemandeur> {
                     demandesActive[index].id,
                     demandesActive[index].libelle,
                     demandesActive[index].datedemande,
-                    demandesActive[index].description,"d",
-                    demandesActive[index].priorite),
+                    demandesActive[index].description,"d"),
                 child: Text('Intialiser'),
               ) : new RaisedButton(
                 shape: RoundedRectangleBorder(
@@ -135,8 +135,7 @@ class _HomeDemandeurState extends State<HomeDemandeur> {
                     demandesActive[index].id,
                     demandesActive[index].libelle,
                     demandesActive[index].datedemande,
-                    demandesActive[index].description,"t",
-                    demandesActive[index].priorite),
+                    demandesActive[index].description,"t"),
                 child: Text('Finir'),
               ),
               onTap: null,
@@ -190,9 +189,9 @@ class _HomeDemandeurState extends State<HomeDemandeur> {
     );
   }
   void changeEtat(int id, String libelle, String datedemande,
-      String description,String etat, String priorite) async {
+      String description,String etat) async {
     Demande demande = new Demande.WithId(
-        id, libelle, datedemande, description,etat, priorite, 1);
+        id, libelle, datedemande, description,etat, 1);
     var saveResponse = await APIServices.putDemandeEncours(demande);
     saveResponse == true ? Toasts.showSucssesToast("zahia") : null;
   }

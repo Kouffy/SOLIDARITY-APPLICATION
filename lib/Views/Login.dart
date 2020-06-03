@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:solidarite/Models/Utilisateur.dart';
 import 'package:solidarite/Models/api.services.dart';
+import 'package:solidarite/Views/Home_Demandeur.dart';
 import 'package:solidarite/Views/Home_volontaire.dart';
 import 'package:solidarite/Views/Register.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class Login extends StatefulWidget {
+  static const String routeName = '/login';
   @override
   _LoginState createState() => _LoginState();
 }
@@ -131,6 +133,12 @@ class _LoginState extends State<Login> {
       MaterialPageRoute(builder: (context) => Homevolontaire()),
     );
   }
+    void navigateToHomeDemandeur() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomeDemandeur()),
+    );
+  }
 
   void loginIn() async {
     Response userlogedin = await APIServices.getUtilisateurLogin(
@@ -155,7 +163,7 @@ class _LoginState extends State<Login> {
       pref.setString('password', user.password);
       pref.setString('type', user.type);
       Navigator.pop(context);
-      navigateToHomeVoloteire();
+      user.type == 'v' ? navigateToHomeVoloteire() : navigateToHomeDemandeur();
     } else {
       print(userlogedin.statusCode);
       showErrorToast();

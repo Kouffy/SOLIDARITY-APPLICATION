@@ -5,6 +5,7 @@ import 'package:solidarite/Views/LoginAdmin.dart';
 import 'Register.dart';
 
 class LoginType extends StatefulWidget {
+  static const String routeName = '/logintype';
   @override
   _LoginTypeState createState() => _LoginTypeState();
 }
@@ -42,7 +43,8 @@ class _LoginTypeState extends State<LoginType> {
                         padding: const EdgeInsets.all(0.0),
                         onPressed: () => navigateToRegister('d'),
                         child: Container(
-                          height: 50,
+                          height: 50.0,
+
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               gradient: LinearGradient(colors: [

@@ -3,6 +3,7 @@ import 'package:solidarite/Models/Utilisateur.dart';
 import 'package:solidarite/Models/api.services.dart';
 
 class Register extends StatefulWidget {
+    static const String routeName = '/register';
   final String type;
   Register(this.type);
   //Register({Key key}):super(key:key);

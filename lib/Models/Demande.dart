@@ -4,7 +4,6 @@ class Demande {
   String _datedemande;
   String _description;
   String _etat;
-  String _priorite;
   int _idUtilisateur;
 
   Demande(
@@ -12,7 +11,6 @@ class Demande {
       this._datedemande,
       this._description,
       this._etat,
-      this._priorite,
       this._idUtilisateur,);
 
   Demande.WithId(
@@ -21,7 +19,6 @@ class Demande {
       this._datedemande,
       this._description,
       this._etat,
-      this._priorite,
       this._idUtilisateur);
 
   int get id => _id;
@@ -29,7 +26,6 @@ class Demande {
   String get datedemande => _datedemande;
   String get description => _description;
   String get etat => _etat;
-  String get priorite => _priorite;
   int get idUtilisateur => _idUtilisateur;
 
 
@@ -50,10 +46,6 @@ class Demande {
     _etat = newetat;
   }
 
-  set priorite(String newpriorite) {
-    _priorite = newpriorite;
-  }
-
   set idUtilisateur(int newidUtilisateur) {
     _idUtilisateur = newidUtilisateur;
   }
@@ -66,7 +58,6 @@ class Demande {
     map["datedemande"] = _datedemande;
     map["description"] = _description;
     map["etat"] = _etat;
-    map["priorite"] = _priorite;
     map["idUtilisateur"] = _idUtilisateur;
     if (_id != null) {
       map["id"] = _id;
@@ -80,7 +71,6 @@ class Demande {
     this.datedemande =o["datedemande"];
     this.description =o["description"];
     this.etat =o["etat"];
-    this.priorite =o["priorite"];
     this.idUtilisateur =o["idUtilisateur"];
   }
 }

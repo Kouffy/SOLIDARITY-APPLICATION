@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:solidarite/Models/Utilisateur.dart';
 import 'package:solidarite/Models/api.services.dart';
 class Utilisateurs extends StatefulWidget {
+  static const String routeName = '/listeutilisateurs';
   Utilisateurs({Key key}):super(key:key);
   @override
   _UtilisateursState createState() => _UtilisateursState();
