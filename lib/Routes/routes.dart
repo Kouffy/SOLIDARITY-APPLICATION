@@ -1,13 +1,13 @@
-import 'package:solidarite/Views/EditProfile.dart';
-import 'package:solidarite/Views/Home_Demandeur.dart';
-import 'package:solidarite/Views/Home_volontaire.dart';
+import 'package:solidarite/Views/Admin/LoginAdmin.dart';
 import 'package:solidarite/Views/Listeutilisateur.dart';
-import 'package:solidarite/Views/Login.dart';
-import 'package:solidarite/Views/LoginAdmin.dart';
 import 'package:solidarite/Views/LoginType.dart';
-import 'package:solidarite/Views/NewDemande.dart';
-import 'package:solidarite/Views/Profile.dart';
 import 'package:solidarite/Views/Register.dart';
+import 'package:solidarite/Views/Utilisateur/EditProfile.dart';
+import 'package:solidarite/Views/Utilisateur/Home_Demandeur.dart';
+import 'package:solidarite/Views/Utilisateur/Home_volontaire.dart';
+import 'package:solidarite/Views/Utilisateur/Login.dart';
+import 'package:solidarite/Views/Utilisateur/NewDemande.dart';
+import 'package:solidarite/Views/Utilisateur/Profile.dart';
 
 class Routes {
   static const String editprofile = EditProfile.routeName;

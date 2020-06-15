@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:solidarite/Models/Utilisateur.dart';
 import 'package:solidarite/Models/api.services.dart';
-import 'package:solidarite/Views/Home_Demandeur.dart';
-import 'package:solidarite/Views/Home_volontaire.dart';
-import 'package:solidarite/Views/Register.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../../Toasts.dart';
+import 'Home_Demandeur.dart';
+import 'Home_volontaire.dart';
 
 class Login extends StatefulWidget {
   static const String routeName = '/login';
@@ -34,18 +33,15 @@ class _LoginState extends State<Login> {
                         fit: BoxFit.fill)),
                 child: Stack(
                   children: <Widget>[
-                    Positioned(
-                      child: Container(
-                        padding: EdgeInsets.only(top: 50),
-                        child: Center(
-                          child: Text("Connexion",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 35,
-                                  fontWeight: FontWeight.bold)),
-                        ),
+                    Center(
+                        child: Container(
+                      padding: EdgeInsets.only(top: 150.0),
+                      child: Image.asset(
+                        'assets/images/solidarite_icon.png',
+                        height: 150,
+                        width: 250,
                       ),
-                    ),
+                    )),
                   ],
                 ),
               ),
@@ -125,15 +121,14 @@ class _LoginState extends State<Login> {
     );
   }
 
-
-
   void navigateToHomeVoloteire() async {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Homevolontaire()),
     );
   }
-    void navigateToHomeDemandeur() async {
+
+  void navigateToHomeDemandeur() async {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => HomeDemandeur()),
@@ -141,9 +136,10 @@ class _LoginState extends State<Login> {
   }
 
   void loginIn() async {
+    try
+    {
     Response userlogedin = await APIServices.getUtilisateurLogin(
         loginController.text, passwordController.text);
-
     if (userlogedin.statusCode == 200) {
       var resulat = json.decode(userlogedin.body);
       Utilisateur user = Utilisateur.fromObject(resulat);
@@ -162,21 +158,15 @@ class _LoginState extends State<Login> {
       pref.setString('login', user.login);
       pref.setString('password', user.password);
       pref.setString('type', user.type);
-      Navigator.pop(context);
       user.type == 'v' ? navigateToHomeVoloteire() : navigateToHomeDemandeur();
     } else {
       print(userlogedin.statusCode);
-      showErrorToast();
+      Toasts.showFailedToast("Connection échoué");
+    }
+    }
+    catch(e)
+    {
+      Toasts.showFailedToast("Serveur indisponible");
     }
   }
-
-  void showErrorToast() {
-    Fluttertoast.showToast(
-        msg: "Connection échoué",
-        toastLength: Toast.LENGTH_SHORT,
-        backgroundColor: Colors.red,
-        textColor: Colors.white);
-  }
-
-  
 }

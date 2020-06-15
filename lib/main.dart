@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:solidarite/Views/LoginType.dart';
-
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {

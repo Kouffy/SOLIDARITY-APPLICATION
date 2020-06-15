@@ -5,7 +5,7 @@ import 'package:solidarite/Models/Demande.dart';
 import 'package:solidarite/Models/api.services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'ListItems.dart';
+import '../ListItems.dart';
 
 class Homevolontaire extends StatefulWidget {
   Homevolontaire({Key key}) : super(key: key);
@@ -17,6 +17,20 @@ class Homevolontaire extends StatefulWidget {
 class _HomevolontaireState extends State<Homevolontaire> {
   String ville = "", region = "";
   int id = 0;
+
+  getPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      id = prefs.getInt('id');
+      ville = prefs.getString('ville');
+      region = prefs.getString('region');
+      print(id);
+      print(ville);
+      print(region);
+    });
+  }
+
+
   var idController = new TextEditingController();
   var libelleController = new TextEditingController();
   var datedemandeController = new TextEditingController();
@@ -28,35 +42,24 @@ class _HomevolontaireState extends State<Homevolontaire> {
     content: Text("404,la connection a echoué"),
   );
   List<Demande> demandes;
-  EtatItem selectedEtat;
+/*  EtatItem selectedEtat;
   List<EtatItem> users = <EtatItem>[
-    const EtatItem('Disponible',Icon(Icons.event_available,color:  const Color(0xFF167F67),)),
-    const EtatItem('Fermé',Icon(Icons.close,color:  const Color(0xFF167F67),)),
-  ];
+    const EtatItem('Disponible',Icon(Icons.event_available,color:  const Color(0xFF167F67),),'d'),
+    const EtatItem('Fermé',Icon(Icons.close,color:  const Color(0xFF167F67),),'f'),
+  ];*/
+  @override
   void initState() {
     super.initState();
+    
     setState(() {
-      idController.text = '1';
+      getPreferences();
     });
   }
 
-  getVille() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      ville = prefs.getString('ville');
-    });
-  }
 
-  getid() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      id = prefs.getInt('id');
-    });
-  }
 
   getDemandes() {
-    getVille();
-    getid();
+   getPreferences();
     APIServices.fetchDemande(ville, id).then((response) {
       Iterable list = json.decode(response.body);
       List<Demande> demandeList = List<Demande>();
@@ -99,10 +102,10 @@ class _HomevolontaireState extends State<Homevolontaire> {
         return Card(
           color: Colors.white,
           elevation: 2.0,
-          child: ListTile(
-            title: ListTile(
-              title: Text(demandes[index].libelle.toString()),
-              trailing: demandes[index].etat == "d"
+          child: Column(
+            children: <Widget>[
+               Text(demandes[index].libelle.toString()),
+                demandes[index].etat == "d"
                   ? new RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0)),
@@ -114,8 +117,8 @@ class _HomevolontaireState extends State<Homevolontaire> {
                           demandes[index].description,
                           "e"),
                       child: Text('Intervenir'),
-                    )
-                  : new RaisedButton(
+                      
+                    ): new RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0)),
                       textColor: Colors.white,
@@ -127,9 +130,16 @@ class _HomevolontaireState extends State<Homevolontaire> {
                           "d"),
                       child: Text('Annuler'),
                     ),
-              onTap: null,
-            ),
-          ),
+                Row(
+                  children: <Widget>[
+                    RaisedButton(onPressed: (){},
+                    child: Icon(Icons.comment),
+                    
+                    ),
+                  ],
+                )
+            ],
+          )
         );
       },
     );
@@ -198,30 +208,7 @@ class _HomevolontaireState extends State<Homevolontaire> {
             SizedBox(
               height: 10.0,
             ),
-           DropdownButton<EtatItem>(
-            hint:  Text("Select item"),
-            value: selectedEtat,
-            onChanged: (EtatItem value) {
-              setState(() {
-                selectedEtat = value;
-              });
-            },
-            items: users.map((EtatItem etat) {
-              return  DropdownMenuItem<EtatItem>(
-                value: etat,
-                child: Row(
-                  children: <Widget>[
-                    etat.icon,
-                    SizedBox(width: 10,),
-                    Text(
-                      etat.name,
-                      style:  TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
+
             SizedBox(
               height: 10.0,
             ),
@@ -255,7 +242,7 @@ class _HomevolontaireState extends State<Homevolontaire> {
         libelleController.text,
         datedemandeController.text,
         descriptionController.text,
-        etatController.text,
+       'd',
         1);
     var saveResponse = await APIServices.postDemande(demande);
     saveResponse == true

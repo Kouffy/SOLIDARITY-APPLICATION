@@ -5,7 +5,8 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solidarite/Models/Utilisateur.dart';
 import 'package:solidarite/Models/api.services.dart';
-import 'package:solidarite/Views/EditProfile.dart';
+
+import 'EditProfile.dart';
 
 class Profile extends StatefulWidget {
   static const String routeName = '/profile';
@@ -19,7 +20,7 @@ class _ProfileState extends State<Profile> {
   getid() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      id = 1;
+      id = prefs.getInt("id");
     });
   }
 
@@ -57,7 +58,7 @@ class _ProfileState extends State<Profile> {
                       radius: 80,
                       backgroundColor: Colors.white,
                       backgroundImage: NetworkImage(
-                          'https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png'),
+                          APIServices.urlBase + APIServices.urlUtilisateur + APIServices.urlGetImageUtilisateur + 'image_97444.jpg'),
                     )),
                 SizedBox(
                   height: 10.0,

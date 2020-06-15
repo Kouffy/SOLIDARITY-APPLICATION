@@ -3,13 +3,9 @@ import 'package:http/http.dart';
 import 'package:solidarite/Models/Utilisateur.dart';
 import 'package:solidarite/Models/api.services.dart';
 import 'package:solidarite/Views/Admin/Panel.dart';
-import 'package:solidarite/Views/Home_volontaire.dart';
-import 'package:solidarite/Views/Register.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-
-import '../Toasts.dart';
+import '../../Toasts.dart';
 
 class LoginAdmin extends StatefulWidget {
   static const String routeName = '/adminlogin';

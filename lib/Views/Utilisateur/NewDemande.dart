@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solidarite/Models/Demande.dart';
-import 'package:solidarite/Models/Utilisateur.dart';
 import 'package:solidarite/Models/api.services.dart';
 
 class NewDemande extends StatefulWidget {
   static const String routeName = '/newdemande';
-  //Register({Key key}):super(key:key);
   @override
   _NewDemandeState createState() => _NewDemandeState();
 }
 
 class _NewDemandeState extends State<NewDemande> {
+  getPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      idController.text = prefs.getInt('id').toString();
+      print('logged user :' + idController.text);
+    });
+  }
   var idController = new TextEditingController();
   var libelleController = new TextEditingController();
-  var datedemandeController = new TextEditingController();
   var descriptionController = new TextEditingController();
-  var etatController = new TextEditingController();
   var idUtilisateurController = new TextEditingController();
   var textStyle = TextStyle();
   String typeDropDownStr = "Volontaire";
@@ -25,9 +29,8 @@ class _NewDemandeState extends State<NewDemande> {
   );
   void initState() {
     super.initState();
-    idController.text = '1';
+    getPreferences();
   }
-
   @override
   Widget build(BuildContext context) {
     textStyle = Theme.of(context).textTheme.title;
@@ -36,11 +39,9 @@ class _NewDemandeState extends State<NewDemande> {
       body: _buildForm(),
     );
   }
-
   Widget _builAppBar() {
-    return AppBar(title: Text('S\'enregistrer'));
+    return AppBar(title: Text('Nouvelle Demande'));
   }
-
   Widget _buildForm() {
     return Padding(
         padding: EdgeInsets.only(top: 35.0, left: 10.0, right: 10.0),
@@ -61,38 +62,10 @@ class _NewDemandeState extends State<NewDemande> {
               height: 10.0,
             ),
             TextField(
-              controller: datedemandeController,
-              style: textStyle,
-              decoration: InputDecoration(
-                labelText: "Date ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
               controller: descriptionController,
               style: textStyle,
               decoration: InputDecoration(
                 labelText: "Description ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              controller: etatController,
-              style: textStyle,
-              decoration: InputDecoration(
-                labelText: "Etat  ...",
                 labelStyle: textStyle,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5.0),
@@ -126,18 +99,17 @@ class _NewDemandeState extends State<NewDemande> {
           ],
         ));
   }
-
   void enregistrerDemande() async {
-     Demande demande = new Demande(libelleController.text, datedemandeController.text, descriptionController.text, etatController.text, 1);
+     Demande demande = new Demande(libelleController.text,DateTime.now().toString(), descriptionController.text,'d',int.parse(idController.text));
     var saveResponse = await APIServices.postDemande(demande);
     saveResponse == true
         ? showSucssesToast()
         : Scaffold.of(context).showSnackBar(connectionissueSanckBar);
+        Navigator.pop(context);
   }
-
   void showSucssesToast() {
     Fluttertoast.showToast(
-        msg: "Commande Publiée",
+        msg: "Post Publiée",
         toastLength: Toast.LENGTH_SHORT,
         backgroundColor: Colors.blueAccent,
         textColor: Colors.white);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:solidarite/Views/Login.dart';
-import 'package:solidarite/Views/LoginAdmin.dart';
 
+import 'Admin/LoginAdmin.dart';
 import 'Register.dart';
+import 'Utilisateur/Login.dart';
 
 class LoginType extends StatefulWidget {
   static const String routeName = '/logintype';
@@ -115,6 +115,7 @@ class _LoginTypeState extends State<LoginType> {
       context,
       MaterialPageRoute(builder: (context) => Login()),
     );
+    Navigator.pop(context);
   }
   void navigateToLoginAdmin() async {
      await Navigator.push(
