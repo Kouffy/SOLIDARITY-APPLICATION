@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:solidarite/Models/Utilisateur.dart';
+import 'package:solidarite/Models/Administrateur.dart';
 import 'package:solidarite/Models/api.services.dart';
 import 'package:solidarite/Views/Admin/Panel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +19,7 @@ class _LoginAdminState extends State<LoginAdmin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Authetification administrateur'),),
       backgroundColor: Colors.white,
       body: ListView(children: <Widget>[
         Container(
@@ -32,18 +33,15 @@ class _LoginAdminState extends State<LoginAdmin> {
                         fit: BoxFit.fill)),
                 child: Stack(
                   children: <Widget>[
-                    Positioned(
-                      child: Container(
-                        padding: EdgeInsets.only(top: 50),
-                        child: Center(
-                          child: Text("Connexion",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 35,
-                                  fontWeight: FontWeight.bold)),
-                        ),
+                   Center(
+                        child: Container(
+                      padding: EdgeInsets.only(top: 150.0),
+                      child: Image.asset(
+                        'assets/images/admin_solidarite_icon.png',
+                        height: 150,
+                        width: 250,
                       ),
-                    ),
+                    )),
                   ],
                 ),
               ),
@@ -81,6 +79,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                             border: Border(
                                 bottom: BorderSide(color: Colors.grey[100]))),
                         child: TextField(
+                          obscureText: true,
                           controller: passwordController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
@@ -133,23 +132,23 @@ class _LoginAdminState extends State<LoginAdmin> {
   }
 
   void loginIn() async {
-    Response userlogedin = await APIServices.getAdministateurLogin(
+    Response adminlogedin = await APIServices.getAdministateurLogin(
         loginController.text, passwordController.text);
-
-    if (userlogedin.statusCode == 200) {
-      var resulat = json.decode(userlogedin.body);
-      Utilisateur user = Utilisateur.fromObject(resulat);
+    if (adminlogedin.statusCode == 200) {
+      var resulat = json.decode(adminlogedin.body);
+      Administrateur admin = Administrateur.fromObject(resulat);
       SharedPreferences pref = await SharedPreferences.getInstance();
       pref.setBool('is_logedin', true);
-      pref.setInt('id', user.id);
-      pref.setString('nom', user.nom);
-      pref.setString('prenom', user.prenom);
-      pref.setString('login', user.login);
-      pref.setString('password', user.password);
+      pref.setInt('id', admin.id);
+      pref.setString('nom', admin.nom);
+      pref.setString('prenom', admin.prenom);
+      print(admin.prenom);
+      pref.setString('login', admin.login);
+      pref.setString('password', admin.password);
       Navigator.pop(context);
       navigateToAdminPanel();
     } else {
-      print(userlogedin.statusCode);
+      print(adminlogedin.statusCode);
       Toasts.showFailedToast("Connection echoué");
     }
   }

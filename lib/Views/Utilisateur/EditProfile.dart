@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:solidarite/Models/Region.dart';
 import 'package:solidarite/Models/Utilisateur.dart';
+import 'package:solidarite/Models/Ville.dart';
 import 'package:solidarite/Models/api.services.dart';
 
 class EditProfile extends StatefulWidget {
@@ -11,6 +15,62 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  List<Ville> villes;
+  List<Region> regions;
+  List<DropdownMenuItem<String>> _dropDownMenuItemsVille;
+  List<DropdownMenuItem<String>> _dropDownMenuItemsRegion;
+  String _currentCity;
+  String _currentRegion;
+    bool zeb = false;
+  setDrops()
+  {
+    if(!zeb){
+            villes==null? null :_currentCity = _dropDownMenuItemsVille[0].value;
+     regions==null? null : _currentRegion = _dropDownMenuItemsRegion[0].value;
+     zeb = true;
+    }
+
+  }
+  getVilles() {
+    APIServices.fetchVille().then((response) {
+      Iterable list = json.decode(response.body);
+      List<Ville> villeList = List<Ville>();
+      villeList = list.map((model) => Ville.fromObject(model)).toList();
+      setState(() {
+        villes = villeList;
+      });
+    });
+  }
+
+  getRegions() {
+    APIServices.fetchRegion().then((response) {
+      Iterable list = json.decode(response.body);
+      List<Region> regionList = List<Region>();
+      regionList = list.map((model) => Region.fromObject(model)).toList();
+      setState(() {
+        regions = regionList;
+      });
+    });
+  }
+
+  List<DropdownMenuItem<String>> getDropDownMenuItemsVille() {
+    List<DropdownMenuItem<String>> items = new List();
+    for (Ville city in villes) {
+      items.add(
+          new DropdownMenuItem(value: city.ville, child: new Text(city.ville)));
+    }
+    return items;
+  }
+
+  List<DropdownMenuItem<String>> getDropDownMenuItemsRegion() {
+    List<DropdownMenuItem<String>> items = new List();
+    for (Region city in regions) {
+      items.add(new DropdownMenuItem(
+          value: city.region, child: new Text(city.region)));
+    }
+    return items;
+  }
+
   Utilisateur utilisateur;
   _EditProfileState(this.utilisateur);
   var nomController = new TextEditingController();
@@ -31,12 +91,12 @@ class _EditProfileState extends State<EditProfile> {
   );
   @override
   Widget build(BuildContext context) {
+    getRegions();
+    getVilles();
     nomController.text = utilisateur.nom;
     prenomController.text = utilisateur.prenom;
     ageController.text = utilisateur.age.toString();
     adresseController.text = utilisateur.adreesee;
-    regionController.text = utilisateur.region;
-    villeController.text = utilisateur.ville;
     pdpController.text = utilisateur.pdp;
     emailController.text = utilisateur.email;
     telController.text = utilisateur.tel;
@@ -44,6 +104,16 @@ class _EditProfileState extends State<EditProfile> {
     passwordController.text = utilisateur.password;
     typeController.text = utilisateur.type;
     textStyle = Theme.of(context).textTheme.title;
+
+    villes == null
+        ? null
+        : _dropDownMenuItemsVille = getDropDownMenuItemsVille();
+    regions == null
+        ? null
+        : _dropDownMenuItemsRegion = getDropDownMenuItemsRegion();
+setDrops();
+   
+
     return Scaffold(
       appBar: _builAppBar(),
       body: _buildForm(),
@@ -59,169 +129,194 @@ class _EditProfileState extends State<EditProfile> {
         padding: EdgeInsets.only(top: 35.0, left: 10.0, right: 10.0),
         child: ListView(
           children: <Widget>[
-            TextField(
-              controller: nomController,
-              style: textStyle,
-              onChanged: (value) => utilisateur.nom = nomController.text,
-              decoration: InputDecoration(
-                labelText: "Nom ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
+            new Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                    height: 120.0,
+                    width: 120.0,
+                    child: CircleAvatar(
+                      radius: 80,
+                      backgroundColor: Colors.white,
+                      backgroundImage: utilisateur.pdp == null
+                          ? new AssetImage('assets/images/user.png')
+                          : new NetworkImage(APIServices.urlBase +
+                              APIServices.urlUtilisateur +
+                              APIServices.urlGetImageUtilisateur +
+                              utilisateur.pdp),
+                    )),
+              ],
             ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              controller: prenomController,
-              style: textStyle,
-              onChanged: (value) => utilisateur.prenom = prenomController.text,
-              decoration: InputDecoration(
-                labelText: "Prenom ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              controller: ageController,
-              style: textStyle,
-              onChanged: (value) =>
-                  utilisateur.age = int.parse(ageController.text),
-              decoration: InputDecoration(
-                labelText: "Age ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              controller: adresseController,
-              style: textStyle,
-              onChanged: (value) =>
-                  utilisateur.adresse = adresseController.text,
-              decoration: InputDecoration(
-                labelText: "Adresse ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              controller: regionController,
-              style: textStyle,
-              onChanged: (value) => utilisateur.region = regionController.text,
-              decoration: InputDecoration(
-                labelText: "Region ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              controller: villeController,
-              style: textStyle,
-              onChanged: (value) => utilisateur.ville = villeController.text,
-              decoration: InputDecoration(
-                labelText: "Ville ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              controller: pdpController,
-              style: textStyle,
-              onChanged: (value) => utilisateur.pdp = pdpController.text,
-              decoration: InputDecoration(
-                labelText: "Pdp ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              controller: emailController,
-              style: textStyle,
-              onChanged: (value) => utilisateur.email = emailController.text,
-              decoration: InputDecoration(
-                labelText: "Email ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              controller: telController,
-              style: textStyle,
-              onChanged: (value) => utilisateur.tel = telController.text,
-              decoration: InputDecoration(
-                labelText: "Tel ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              controller: loginController,
-              style: textStyle,
-              onChanged: (value) => utilisateur.login = loginController.text,
-              decoration: InputDecoration(
-                labelText: "Login ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              controller: passwordController,
-              style: textStyle,
-              onChanged: (value) =>
-                  utilisateur.password = passwordController.text,
-              decoration: InputDecoration(
-                labelText: "Password ...",
-                labelStyle: textStyle,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
+            Padding(
+              padding: EdgeInsets.all(30.0),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromRGBO(143, 148, 251, .2),
+                              blurRadius: 20.0,
+                              offset: Offset(0, 10)),
+                        ]),
+                    child: Column(children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[100]))),
+                        child: TextField(
+                          controller: nomController,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Nom",
+                              hintStyle: TextStyle(color: Colors.grey[400])),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[100]))),
+                        child: TextField(
+                          controller: prenomController,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Prenom",
+                              hintStyle: TextStyle(color: Colors.grey[400])),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[100]))),
+                        child: TextField(
+                          controller: ageController,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Age",
+                              hintStyle: TextStyle(color: Colors.grey[400])),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[100]))),
+                        child: TextField(
+                          controller: adresseController,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Adresse",
+                              hintStyle: TextStyle(color: Colors.grey[400])),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      new Text("Choisir une Region: "),
+                      Container(
+                          color: Colors.white,
+                          child: new Center(
+                              child: new DropdownButton(
+                            value: _currentRegion,
+                            items: _dropDownMenuItemsRegion,
+                            onChanged: changedDropDownItemRegion,
+                          ))),
+                      new Text("Choisir une Ville: "),
+                      Container(
+                          color: Colors.white,
+                          child: new Center(
+                              child: new DropdownButton(
+                            value: _currentCity,
+                            items: _dropDownMenuItemsVille,
+                            onChanged: changedDropDownItemVille,
+                          ))),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[100]))),
+                        child: TextField(
+                          controller: emailController,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Email",
+                              hintStyle: TextStyle(color: Colors.grey[400])),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[100]))),
+                        child: TextField(
+                          controller: telController,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Tel",
+                              hintStyle: TextStyle(color: Colors.grey[400])),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[100]))),
+                        child: TextField(
+                          controller: loginController,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Login",
+                              hintStyle: TextStyle(color: Colors.grey[400])),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[100]))),
+                        child: TextField(
+                          controller: passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Password",
+                              hintStyle: TextStyle(color: Colors.grey[400])),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                    ]),
+                  )
+                ],
               ),
             ),
             SizedBox(
@@ -243,11 +338,14 @@ class _EditProfileState extends State<EditProfile> {
                       ])),
                   padding: EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text('S\'enregistrer',
+                    child: Text('Modifier',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w500)),
                   ),
-                ))
+                )),
+            SizedBox(
+              height: 20.0,
+            ),
           ],
         ));
   }
@@ -257,5 +355,17 @@ class _EditProfileState extends State<EditProfile> {
     saveResponse == true
         ? Navigator.pop(context, true)
         : Scaffold.of(context).showSnackBar(connectionissueSanckBar);
+  }
+
+  void changedDropDownItemVille(String selectedCity) {
+    setState(() {
+      _currentCity = selectedCity;
+    });
+  }
+
+  void changedDropDownItemRegion(String selectedRegion) {
+    setState(() {
+      _currentRegion = selectedRegion;
+    });
   }
 }

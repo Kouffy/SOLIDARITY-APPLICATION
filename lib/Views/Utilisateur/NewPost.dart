@@ -4,14 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solidarite/Models/Demande.dart';
 import 'package:solidarite/Models/api.services.dart';
 
-class NewDemande extends StatefulWidget {
-  static const String routeName = '/newdemande';
+class NewPost extends StatefulWidget {
+  static const String routeName = '/NewPost';
   @override
-  _NewDemandeState createState() => _NewDemandeState();
+  _NewPostState createState() => _NewPostState();
 }
 
-class _NewDemandeState extends State<NewDemande> {
-  int id = 0;
+class _NewPostState extends State<NewPost> {
+         int id = 0;
   String ville,pdpuser="",nomuser="";
     getPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -27,6 +27,7 @@ class _NewDemandeState extends State<NewDemande> {
   }
 
 
+  var idController = new TextEditingController();
   var libelleController = new TextEditingController();
   var descriptionController = new TextEditingController();
   var idUtilisateurController = new TextEditingController();
@@ -42,21 +43,20 @@ class _NewDemandeState extends State<NewDemande> {
   @override
   Widget build(BuildContext context) {
     textStyle = Theme.of(context).textTheme.title;
-    getPreferences();
     return Scaffold(
       appBar: _builAppBar(),
       body: _buildForm(),
     );
   }
   Widget _builAppBar() {
-    return AppBar(title: Text('Nouvelle Demande'));
+    return AppBar(title: Text('Nouveau Post'));
   }
   Widget _buildForm() {
     return Padding(
         padding: EdgeInsets.only(top: 35.0, left: 10.0, right: 10.0),
         child: ListView(
           children: <Widget>[
-            Padding(
+             Padding(
               padding: EdgeInsets.all(30.0),
               child: Column(
                 children: <Widget>[
@@ -81,7 +81,7 @@ class _NewDemandeState extends State<NewDemande> {
                           controller: libelleController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Objet de la demande",
+                              hintText: "Objet du post",
                               hintStyle: TextStyle(color: Colors.grey[400])),
                         ),
                       ),
@@ -97,7 +97,7 @@ class _NewDemandeState extends State<NewDemande> {
                           controller: descriptionController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Description",
+                              hintText: "Ajouter  une description",
                               hintStyle: TextStyle(color: Colors.grey[400])),
                         ),
                       ),
@@ -146,7 +146,7 @@ class _NewDemandeState extends State<NewDemande> {
   }
   void showSucssesToast() {
     Fluttertoast.showToast(
-        msg: "Demmande Publiée",
+        msg: "Post Publiée",
         toastLength: Toast.LENGTH_SHORT,
         backgroundColor: Colors.blueAccent,
         textColor: Colors.white);

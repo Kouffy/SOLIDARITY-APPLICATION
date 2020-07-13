@@ -17,16 +17,9 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   int id = 0;
   Utilisateur utilisateur;
-  getid() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      id = prefs.getInt("id");
-    });
-  }
-
   getUtilisateur() async {
-    getid();
-    Response userres = await APIServices.getUtilisateur(id);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Response userres = await APIServices.getUtilisateur(prefs.getInt("id"));
     print(userres.statusCode);
     if (userres.statusCode == 200) {
       var resulat = json.decode(userres.body);
@@ -36,10 +29,16 @@ class _ProfileState extends State<Profile> {
       });
     }
   }
+  @override
+  void initState() {
+    super.initState();
+                  WidgetsBinding.instance.addPostFrameCallback((_){
+            getUtilisateur();
+          });
+  }
 
   @override
   Widget build(BuildContext context) {
-    getUtilisateur();
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(children: <Widget>[
@@ -89,7 +88,7 @@ class _ProfileState extends State<Profile> {
             ListTile(
               title: Text("Genre :"),
               subtitle:
-                  Text(utilisateur.sexe == null ? "null" : utilisateur.nom),
+                  Text(utilisateur.sex),
             ),
             ListTile(
               title: Text("Adresse :"),

@@ -1,48 +1,42 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-
-import 'Admin/LoginAdmin.dart';
-import 'Register.dart';
-import 'Utilisateur/Login.dart';
-
-class LoginType extends StatefulWidget {
-  static const String routeName = '/logintype';
+import 'package:http/http.dart';
+import 'package:solidarite/Helpers/Comunucations.dart';
+import 'package:solidarite/Models/Utilisateur.dart';
+import 'package:solidarite/Models/api.services.dart';
+class ContacterDemandeur extends StatefulWidget {
+    final int idusercontact;
+  ContacterDemandeur({this.idusercontact});
   @override
-  _LoginTypeState createState() => _LoginTypeState();
+  _ContacterDemandeurState createState() => _ContacterDemandeurState();
 }
 
-class _LoginTypeState extends State<LoginType> {
+class _ContacterDemandeurState extends State<ContacterDemandeur> {
+    int id = 0;
+  Utilisateur utilisateur;
+    getUtilisateur() async {
+    Response userres = await APIServices.getUtilisateur(widget.idusercontact);
+    print(userres.statusCode);
+    if (userres.statusCode == 200) {
+      var resulat = json.decode(userres.body);
+      Utilisateur user = Utilisateur.fromObject(resulat);
+      setState(() {
+        utilisateur = user;
+      });
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+              WidgetsBinding.instance.addPostFrameCallback((_){
+            getUtilisateur();
+          });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('UNITED'),),
-      floatingActionButton: _buildFloatingButton(),
-      body: ListView(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-                   Container(
-                height: 300,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/background.png'),
-                        fit: BoxFit.fill)),
-                child: Stack(
-                  children: <Widget>[
-                    Center(
-                        child: Container(
-                      padding: EdgeInsets.only(top: 150.0),
-                      child: Image.asset(
-                        'assets/images/solidarite_icon.png',
-                        height: 150,
-                        width: 250,
-                      ),
-                    )),
-                  ],
-                ),
-              )
-            ],
-          ),
-        Padding(
+      appBar: AppBar(title: Text('Contacter le demandeur'),),
+      body:    Padding(
           padding: EdgeInsets.all(30.0),
                   child: Column(
             children: <Widget>[
@@ -51,7 +45,9 @@ class _LoginTypeState extends State<LoginType> {
                         borderRadius: BorderRadius.circular(10.0)),
                     textColor: Colors.white,
                     padding: const EdgeInsets.all(0.0),
-                    onPressed: () => navigateToRegister('d'),
+                    onPressed: ()  {
+                      Comunications.sendSms(utilisateur.tel);
+                    },
                     child: Container(
                       height: 50.0,
                       decoration: BoxDecoration(
@@ -62,7 +58,7 @@ class _LoginTypeState extends State<LoginType> {
                           ])),
                       padding: EdgeInsets.all(10.0),
                       child: Center(
-                        child: Text('Je m\inscrit en tant que demandeur',
+                        child: Text('contacter ' +utilisateur.nom + ' '+ utilisateur.prenom +' par SMS',
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500)),
                       ),
@@ -75,7 +71,9 @@ class _LoginTypeState extends State<LoginType> {
                         borderRadius: BorderRadius.circular(10.0)),
                     textColor: Colors.white,
                     padding: const EdgeInsets.all(0.0),
-                    onPressed: () => navigateToRegister('v'),
+                    onPressed: () {
+                      Comunications.call(utilisateur.tel);
+                    },
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(
@@ -86,7 +84,7 @@ class _LoginTypeState extends State<LoginType> {
                           ])),
                       padding: EdgeInsets.all(10.0),
                       child: Center(
-                        child: Text('Je m\inscrit en tant que volontaire',
+                        child: Text('Appeler ' +utilisateur.nom +' '+ utilisateur.prenom ,
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500)),
                       ),
@@ -99,7 +97,9 @@ class _LoginTypeState extends State<LoginType> {
                         borderRadius: BorderRadius.circular(10.0)),
                     textColor: Colors.white,
                     padding: const EdgeInsets.all(0.0),
-                    onPressed: () => navigateToLogin(),
+                    onPressed: () {
+                      Comunications.sendEmail(utilisateur.email);
+                    },
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(
@@ -110,7 +110,7 @@ class _LoginTypeState extends State<LoginType> {
                           ])),
                       padding: EdgeInsets.all(10.0),
                       child: Center(
-                        child: Text('J\'ai deja un Compte',
+                        child: Text('contacter ' + utilisateur.nom +' '+ utilisateur.prenom+' par Email',
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500)),
                       ),
@@ -118,38 +118,6 @@ class _LoginTypeState extends State<LoginType> {
             ],
           ),
         ),
-               
-        ],
-      ),
     );
-  }
-
-  void navigateToLogin() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Login()),
-    );
-  }
-
-  void navigateToLoginAdmin() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LoginAdmin()),
-    );
-  }
-
-  void navigateToRegister(String type) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Register(type)),
-    );
-  }
-
-  Widget _buildFloatingButton() {
-    return FloatingActionButton(
-        child: Icon(Icons.settings),
-        onPressed: () {
-          navigateToLoginAdmin();
-        });
   }
 }

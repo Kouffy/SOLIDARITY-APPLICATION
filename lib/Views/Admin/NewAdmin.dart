@@ -1,56 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:solidarite/Models/Demande.dart';
+import 'package:solidarite/Models/Administrateur.dart';
 import 'package:solidarite/Models/api.services.dart';
+import 'package:solidarite/Toasts.dart';
 
-class NewDemande extends StatefulWidget {
-  static const String routeName = '/newdemande';
+class NewAdmin extends StatefulWidget {
+  static const String routeName = '/newadmin';
   @override
-  _NewDemandeState createState() => _NewDemandeState();
+  _NewAdminState createState() => _NewAdminState();
 }
 
-class _NewDemandeState extends State<NewDemande> {
-  int id = 0;
-  String ville,pdpuser="",nomuser="";
-    getPreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      id = prefs.getInt('id');
-      ville = prefs.getString('ville');
-      pdpuser = prefs.getString('pdp');
-      nomuser = prefs.getString('nom');
-      nomuser += " ";
-      nomuser += prefs.getString('prenom');
-      print(id);
-    });
-  }
-
-
-  var libelleController = new TextEditingController();
-  var descriptionController = new TextEditingController();
-  var idUtilisateurController = new TextEditingController();
-  var textStyle = TextStyle();
-  String typeDropDownStr = "Volontaire";
-  final connectionissueSanckBar = SnackBar(
-    content: Text("404,la connection a echoué"),
-  );
-  void initState() {
-    super.initState();
-    getPreferences();
-  }
+class _NewAdminState extends State<NewAdmin> {
+  var nomController = new TextEditingController();
+  var prenomController = new TextEditingController();
+  var loginController = new TextEditingController();
+  var passwordController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
-    textStyle = Theme.of(context).textTheme.title;
-    getPreferences();
     return Scaffold(
       appBar: _builAppBar(),
       body: _buildForm(),
     );
   }
+
   Widget _builAppBar() {
-    return AppBar(title: Text('Nouvelle Demande'));
+    return AppBar(title: Text('Nouveau Administrateur'));
   }
+
   Widget _buildForm() {
     return Padding(
         padding: EdgeInsets.only(top: 35.0, left: 10.0, right: 10.0),
@@ -78,10 +53,10 @@ class _NewDemandeState extends State<NewDemande> {
                             border: Border(
                                 bottom: BorderSide(color: Colors.grey[100]))),
                         child: TextField(
-                          controller: libelleController,
+                          controller: nomController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Objet de la demande",
+                              hintText: "Nom",
                               hintStyle: TextStyle(color: Colors.grey[400])),
                         ),
                       ),
@@ -94,10 +69,43 @@ class _NewDemandeState extends State<NewDemande> {
                             border: Border(
                                 bottom: BorderSide(color: Colors.grey[100]))),
                         child: TextField(
-                          controller: descriptionController,
+                          controller: prenomController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Description",
+                              hintText: "Prenom",
+                              hintStyle: TextStyle(color: Colors.grey[400])),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[100]))),
+                        child: TextField(
+                          controller: loginController,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Login",
+                              hintStyle: TextStyle(color: Colors.grey[400])),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[100]))),
+                        child: TextField(
+                          controller: passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Password",
                               hintStyle: TextStyle(color: Colors.grey[400])),
                         ),
                       ),
@@ -109,15 +117,12 @@ class _NewDemandeState extends State<NewDemande> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 10.0,
-            ),
             RaisedButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
                 textColor: Colors.white,
                 padding: const EdgeInsets.all(0.0),
-                onPressed: () => enregistrerDemande(),
+                onPressed: () => enregistrerAdministrateur(),
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(
@@ -128,28 +133,27 @@ class _NewDemandeState extends State<NewDemande> {
                       ])),
                   padding: EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text('Publier',
+                    child: Text('Ajouter',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w500)),
                   ),
-                ))
+                )),
+            SizedBox(
+              height: 20.0,
+            )
           ],
         ));
   }
-  void enregistrerDemande() async {
-     Demande demande = new Demande(libelleController.text,DateTime.now().toString(), descriptionController.text,'d',id,pdpuser,nomuser);
-    var saveResponse = await APIServices.postDemande(demande);
-    saveResponse == true
-        ? showSucssesToast()
-        : Scaffold.of(context).showSnackBar(connectionissueSanckBar);
-        Navigator.pop(context);
-  }
-  void showSucssesToast() {
-    Fluttertoast.showToast(
-        msg: "Demmande Publiée",
-        toastLength: Toast.LENGTH_SHORT,
-        backgroundColor: Colors.blueAccent,
-        textColor: Colors.white);
-  }
 
+  void enregistrerAdministrateur() async {
+    Administrateur administrateur = new Administrateur(nomController.text,
+        prenomController.text, loginController.text, passwordController.text);
+    var saveResponse = await APIServices.postAdministateur(administrateur);
+    if (saveResponse) {
+      Toasts.showSucssesToast("Ajouté");
+      Navigator.pop(context, true);
+    } else {
+      Toasts.showFailedToast("Serveur Indisponible");
+    }
+  }
 }

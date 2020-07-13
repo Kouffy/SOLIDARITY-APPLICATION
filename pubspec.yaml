@@ -27,6 +27,7 @@ dependencies:
   shared_preferences: ^0.5.7
   image_picker: 0.6.6+5
   path_provider: ^1.6.10
+  url_launcher: ^5.0.3
 
 dev_dependencies:
   flutter_test:

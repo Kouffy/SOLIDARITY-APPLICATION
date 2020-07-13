@@ -61,7 +61,7 @@ class Rapport {
     this._id = o["id"];
     this.libelle = o["libelle"];
     this.dateRapport =o["dateRapport"];
-    this.contenu =o["description"];
+    this.contenu =o["contenu"];
     this.idUtilisateur =o["idUtilisateur"];
   }
 }

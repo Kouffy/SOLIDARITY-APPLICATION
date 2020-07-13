@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:solidarite/Routes/routes.dart';
 import 'package:solidarite/Views/LoginType.dart';
+import 'package:solidarite/Views/Utilisateur/Archives.dart';
+import 'package:solidarite/Views/Utilisateur/Home_Demandeur.dart';
+import 'package:solidarite/Views/Utilisateur/Volontaires.dart';
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {

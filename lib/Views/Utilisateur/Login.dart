@@ -20,6 +20,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Authetification'),),
       backgroundColor: Colors.white,
       body: ListView(children: <Widget>[
         Container(
@@ -79,6 +80,7 @@ class _LoginState extends State<Login> {
                             border: Border(
                                 bottom: BorderSide(color: Colors.grey[100]))),
                         child: TextField(
+                          obscureText: true,
                           controller: passwordController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
